@@ -18,7 +18,6 @@ l = machine.Pin(16, machine.Pin.OUT)
 rtc = machine.RTC()
 ntptime.settime()
 
-addr_info = None
 while True:
     try:
         # 443 for https. Change 80 for debug and change tls later
@@ -36,11 +35,12 @@ while True:
 
     try:
         now = rtc.datetime()
+        timestamp = '%04d-%02d-%02dT%02d:%02d:%02d.%03dZ' % (now[0], now[1], now[2], now[4], now[5], now[6], now[7])
         d.measure()
         temp = d.temperature()
         hum = d.humidity()
 
-        body = '{ "time": "%s", "temperature": %s, "humidity": %s }' % (now, temp, hum)
+        body = '{ "timestamp": "%s", "temperature": %s, "humidity": %s }' % (timestamp, temp, hum)
         content = 'POST /%s HTTP/1.0\r\nHost: %s\r\nContent-Type: application/json\r\nContent-Length: %s\r\n\r\n%s' % (relative, base, len(body), body)
         payload = bytes(content, 'utf8')
 
