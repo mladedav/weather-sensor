@@ -35,7 +35,6 @@ base, relative = ENDPOINT.split('/', 1)
 d = dht.DHT11(machine.Pin(0))
 l = machine.Pin(16, machine.Pin.OUT)
 rtc = machine.RTC()
-ntptime.settime()
 
 print(base)
 print(relative)
@@ -62,6 +61,7 @@ while True:
     try:
         l.off()
         wdt_feed()
+        ntptime.settime()
 
         now = rtc.datetime()
         d.measure()
